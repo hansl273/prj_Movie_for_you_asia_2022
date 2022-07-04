@@ -34,25 +34,27 @@ review_number_xpath =  '//*[@id="reviewTab"]/div/div/div[2]/span/em'
 review_button_xpath = '//*[@id="movieEndTabMenu"]/li[6]/a'                   #review button
 #                      //*[@id="movieEndTabMenu"]/li[6]/a
 your_year = 2020 # 할당받은 연도로 수정하세요.
-for i in range(1, 3): #38
+for i in range(1, 6): #38
     url = 'https://movie.naver.com/movie/sdb/browsing/bmovie.naver?open={}&page={}'.format(your_year, i)
     titles = []
     reviews = []
     try:
 
-        for j in range(1, 3): #21
+        for j in range(1, 21): #21
             driver.get(url)
-            time.sleep(0.5)
+            time.sleep(0.1)
             movie_title_xpath = '//*[@id="old_content"]/ul/li[{}]/a'.format(j)
             try:
                 title = driver.find_element("xpath", movie_title_xpath).text
                 driver.find_element("xpath", movie_title_xpath).click()
-                time.sleep(0.5)
+                time.sleep(0.1)
                 driver.find_element('xpath', review_button_xpath).click()
-                time.sleep(0.5)
+                time.sleep(0.1)
                 review_range = driver.find_element('xpath', review_number_xpath).text
                 review_range = review_range.replace(',', '')
                 review_range = (int(review_range)-1) // 10 + 2
+                if review_range > 5:
+                    review_range = 5
                 for k in range(1, review_range):
                     review_page_button_xpath = '//*[@id="pagerTagAnchor{}"]'.format(k)
                     try:
@@ -63,7 +65,7 @@ for i in range(1, 3): #38
                             try:
                                 review = driver.find_element('xpath', review_title_xpath).click()
                                 back_flag = True
-                                time.sleep(0.5)
+                                time.sleep(0.1)
                                 review = driver.find_element('xpath', review_xpath).text
                                 titles.append(title)
                                 reviews.append(review)
@@ -80,9 +82,8 @@ for i in range(1, 3): #38
                 print('movie', i, j)
         print(len(titles))
         df = pd.DataFrame({'title':titles, 'reviews':reviews})
-        print('debug01')
         df.to_csv('./crawling_data/reviews_{}_{}page.csv'.format(your_year, i), index=False)
-        print('debug02')
+
     except:
         print('page', i)
 
