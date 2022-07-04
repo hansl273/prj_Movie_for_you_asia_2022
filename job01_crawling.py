@@ -6,7 +6,7 @@
 # 컬럼명은 ['title','reviews']로 통일해주세요.
 # 파일명은 "reviews_{}.csv".format(연도) 해주세요.
 # crawling 코드는 완성되는대로 PR 부탁합니다.
-
+import columns as columns
 from selenium import webdriver
 import pandas as pd
 from selenium.common.exceptions import NoSuchElementException
@@ -34,14 +34,15 @@ review_number_xpath =  '//*[@id="reviewTab"]/div/div/div[2]/span/em'
 review_button_xpath = '//*[@id="movieEndTabMenu"]/li[6]/a'                   #review button
 #                      //*[@id="movieEndTabMenu"]/li[6]/a
 your_year = 2020 # 할당받은 연도로 수정하세요.
-for i in range(1, 38):
+for i in range(1, 3): #38
     url = 'https://movie.naver.com/movie/sdb/browsing/bmovie.naver?open={}&page={}'.format(your_year, i)
     titles = []
     reviews = []
     try:
-        time.sleep(0.5)
-        for j in range(1, 21):
+
+        for j in range(1, 3): #21
             driver.get(url)
+            time.sleep(0.5)
             movie_title_xpath = '//*[@id="old_content"]/ul/li[{}]/a'.format(j)
             try:
                 title = driver.find_element("xpath", movie_title_xpath).text
@@ -57,28 +58,37 @@ for i in range(1, 38):
                     try:
                         driver.find_element('xpath', review_page_button_xpath).click()
                         for l in range(1, 11):
+                            back_flag = False
                             review_title_xpath = '//*[@id="reviewTab"]/div/div/ul/li[{}]/a'.format(l)
                             try:
                                 review = driver.find_element('xpath', review_title_xpath).click()
+                                back_flag = True
                                 time.sleep(0.5)
                                 review = driver.find_element('xpath', review_xpath).text
-                                print(title)
-                                print(review)
+                                titles.append(title)
+                                reviews.append(review)
                                 driver.back()
                             except:
-                                driver.back()
+                                if back_flag:
+                                    driver.back()
                                 print('review', i, j, k, l)
+
                         driver.back()
                     except:
-                        driver.back()
                         print('review page', i, j, k)
-                driver.back()
             except:
                 print('movie', i, j)
+        print(len(titles))
+        df = pd.DataFrame({'title':titles, 'reviews':reviews})
+        print('debug01')
+        df.to_csv('./crawling_data/reviews_{}_{}page.csv'.format(your_year, i), index=False)
+        print('debug02')
     except:
         print('page', i)
-    finally:
-        driver.close()
+
+
+
+driver.close()
 
 
 
