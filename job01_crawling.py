@@ -33,13 +33,14 @@ review_xpath = '//*[@id="content"]/div[1]/div[4]/div[1]/div[4]'
 review_number_xpath =  '//*[@id="reviewTab"]/div/div/div[2]/span/em'
 review_button_xpath = '//*[@id="movieEndTabMenu"]/li[6]/a'                   #review button
 #                      //*[@id="movieEndTabMenu"]/li[6]/a
-for i in range(1, 3): #38
-    url = 'https://movie.naver.com/movie/sdb/browsing/bmovie.naver?open=2020&page={}'.format(i)
+your_year = 2020 # 할당받은 연도로 수정하세요.
+for i in range(1, 38):
+    url = 'https://movie.naver.com/movie/sdb/browsing/bmovie.naver?open={}&page={}'.format(your_year, i)
     titles = []
     reviews = []
     try:
         time.sleep(0.5)
-        for j in range(1, 3):  #21
+        for j in range(1, 21):
             driver.get(url)
             movie_title_xpath = '//*[@id="old_content"]/ul/li[{}]/a'.format(j)
             try:
@@ -51,11 +52,11 @@ for i in range(1, 3): #38
                 review_range = driver.find_element('xpath', review_number_xpath).text
                 review_range = review_range.replace(',', '')
                 review_range = (int(review_range)-1) // 10 + 2
-                for k in range(1, 3): #review_range
+                for k in range(1, review_range):
                     review_page_button_xpath = '//*[@id="pagerTagAnchor{}"]'.format(k)
                     try:
                         driver.find_element('xpath', review_page_button_xpath).click()
-                        for l in range(1, 3): #11
+                        for l in range(1, 11):
                             review_title_xpath = '//*[@id="reviewTab"]/div/div/ul/li[{}]/a'.format(l)
                             try:
                                 review = driver.find_element('xpath', review_title_xpath).click()
@@ -77,8 +78,7 @@ for i in range(1, 3): #38
     except:
         print('page', i)
     finally:
-        pass
-        #driver.close()
+        driver.close()
 
 
 
