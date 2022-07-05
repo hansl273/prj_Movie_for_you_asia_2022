@@ -45,6 +45,6 @@ df['cleaned_sentences'] = cleaned_sentences
 df = df[['title', 'cleaned_sentences']]
 df.dropna(inplace=True)
 
-df.to_csv('./crawling_data/cleaned_review_2018.csv', index=False)
+df.to_csv('./crawling_data/cleaned_review_2019.csv', index=False)
 df.info()
 

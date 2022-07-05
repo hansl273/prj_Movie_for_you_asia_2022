@@ -1,7 +1,7 @@
 import pandas as pd
 import glob
 df = pd.DataFrame()
-data_paths = glob.glob('./crawling_data/MR_2020/*')
+data_paths = glob.glob('./crawling_data/CRO/*')
 
 for path in data_paths:
     df_temp = pd.read_csv(path)
@@ -11,7 +11,7 @@ for path in data_paths:
 df.drop_duplicates(inplace=True)
 df.info()
 my_year = 2020
-df.to_csv('./crawling_data/reviews_{}.csv'.format(my_year), index=False)
+df.to_csv('./crawling_data/reviews_2017_2022.csv', index=False)
 
 
 

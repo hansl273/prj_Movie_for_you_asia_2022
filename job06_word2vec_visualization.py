@@ -12,7 +12,7 @@ mpl.rcParams['axes.unicode_minus']=False
 rc('font', family=font_name)
 
 embedding_model = Word2Vec.load('./models/word2vec_2017_2020_movies.model')
-key_word = '사랑'
+key_word = '디씨'
 sim_word = embedding_model.wv.most_similar(key_word, topn=10)
 print(sim_word)
 
@@ -35,6 +35,20 @@ df_xy = pd.DataFrame({'words':labels,
                       'y':new_value[:, 1]})
 print(df_xy)
 print(df_xy.shape)
+df_xy.loc[df_xy.shape[0]] = (key_word, 0, 0)
+
+plt.figure(figsize=(8, 8))
+plt.scatter(0, 0, s=1500, marker='*')
+
+for i in range(len(df_xy) - 1):
+    a = df_xy.loc[[i, 10]]
+    plt.plot(a.x, a.y, '-D', linewidth=1)
+    plt.annotate(df_xy.words[i], xytext=(1, 1),
+                 xy=(df_xy.x[i], df_xy.y[i]),
+                 textcoords='offset points',
+                 ha='right', va='bottom')
+
+plt.show()
 
 
 
