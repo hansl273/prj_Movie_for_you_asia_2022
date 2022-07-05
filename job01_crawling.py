@@ -58,7 +58,10 @@ for i in range(1, 6): #38
                 for k in range(1, review_range):
                     review_page_button_xpath = '//*[@id="pagerTagAnchor{}"]'.format(k)
                     try:
-                        driver.find_element('xpath', review_page_button_xpath).click()
+                        try:
+                            driver.find_element('xpath', review_page_button_xpath).click()
+                        except:
+                            driver.find_element('xpath', '//*[@id="movieEndTabMenu"]/li[5]/a').click()
                         for l in range(1, 11):
                             back_flag = False
                             review_title_xpath = '//*[@id="reviewTab"]/div/div/ul/li[{}]/a'.format(l)

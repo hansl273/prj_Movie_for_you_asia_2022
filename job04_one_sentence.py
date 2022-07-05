@@ -1,6 +1,6 @@
 import pandas as pd
 
-df = pd.read_csv('./crawling_data/cleaned_review_2020.csv')
+df = pd.read_csv('./crawling_data/cleaned_review_2017.csv')
 df.dropna(inplace=True)
 df.info()
 one_sentences = []
