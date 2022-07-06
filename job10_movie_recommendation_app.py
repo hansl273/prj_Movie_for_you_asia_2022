@@ -14,6 +14,8 @@ class Exam(QWidget, form_window):
         super().__init__()
         self.setupUi(self)
         self.Tfidf_matrix = mmread('./models/Tfidf_movie_review.mtx').tocsr()
+        with open('./models/tfidf.pickle', 'rb') as f:
+            self.Tfidf = pickle.load(f)
         self.embedding_model = Word2Vec.load('./models/word2vec_2017_2020_movies.model')
         self.comboBox.addItem('2017-2022 영화 리스트')
         self.df_reviews = pd.read_csv('./crawling_data/reviews_2017_2022.csv')
@@ -24,13 +26,24 @@ class Exam(QWidget, form_window):
 
 
         self.comboBox.currentIndexChanged.connect(self.combobox_slot)
+        self.btn_recommendation.clicked.connect(self.btn_slot)
+
+    def btn_slot(self):
+        key_word = self.le_keyword.text()
+        recommendation = self.recommendation_by_keyword(key_word)
+        if len(recommendation):
+            self.lbl_recommendation.setText(recommendation)
+
 
     def getRecommendation(self, cosin_sim):
+        print('debug01')
         simScore = list(enumerate(cosin_sim[-1]))
         simScore = sorted(simScore, key=lambda x: x[1], reverse=True)
         simScore = simScore[:11]
         movieIdx = [i[0] for i in simScore]
+        print(movieIdx)
         recMovieList = self.df_reviews.iloc[movieIdx, 0]
+        print(recMovieList)
         return recMovieList
 
     def combobox_slot(self):
@@ -44,6 +57,29 @@ class Exam(QWidget, form_window):
         recommendation = self.getRecommendation(cosine_sim)
         recommendation = '\n'.join(list(recommendation[1:]))
         return recommendation
+
+    def recommendation_by_keyword(self, keyword):
+        if keyword:
+            keyword = keyword.split()[0]
+
+            sim_word = self.embedding_model.wv.most_similar(keyword, topn=10)
+            words = [keyword]
+            for word, _ in sim_word:
+                words.append(word)
+            sentence = []
+            count = 10
+            for word in words:
+                sentence = sentence + [word] * count
+                count -= 1
+            sentence = ' '.join(sentence)
+            print(sentence)
+            sentence_vec = self.Tfidf.transform([sentence])
+            cosine_sim = linear_kernel(sentence_vec, self.Tfidf_matrix)
+            recommendation = self.getRecommendation(cosine_sim)
+            recommendation = '\n'.join(list(recommendation[:10]))
+            return recommendation
+        else :
+            return 0
 
 
 
