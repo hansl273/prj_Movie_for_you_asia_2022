@@ -17,7 +17,7 @@ font_name = font_manager.FontProperties(
 plt.rc('font', family='NanumBarunGothic')
 
 df= pd.read_csv('./crawling_data/reviews_2017_2022.csv')
-words = df[df['titles']=='브라더 오브 더 이어 (Brother of the Year)']['reviews']
+words = df[df['titles']=='분노는 말이 없다 (Wrath of Silence)']['reviews']
 print(words.iloc[0])
 words = words.iloc[0].split()
 print(words)

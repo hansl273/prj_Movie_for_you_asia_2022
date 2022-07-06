@@ -47,7 +47,7 @@ with open('./models/tfidf.pickle', 'rb') as f:
 
 # 문장 이용
 okt = Okt()
-sentence = '견딜 수 없이 촌스런 삼남매의 견딜 수 없이 사랑스러운 행복소생기'
+sentence = '화려한 액션과 소름 돋는 반전이 있는 영화'
 review = re.sub('[^가-힣 ]', ' ', sentence)
 
 token = okt.pos(review, stem=True)
@@ -58,7 +58,6 @@ df_token = df_token[(df_token['class'] == 'Noun') |
                     (df_token['class'] == 'Adjective')]
 words = []
 for word in df_token.word:
-
     if 1 < len(word):
         words.append(word)
 cleaned_sentence = ' '.join(words)
