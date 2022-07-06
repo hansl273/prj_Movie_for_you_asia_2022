@@ -6,6 +6,7 @@ from sklearn.metrics.pairwise import linear_kernel
 from gensim.models import Word2Vec
 from scipy.io import mmread
 import pickle
+from PyQt5.QtCore import QStringListModel
 
 form_window = uic.loadUiType('./movie_recommendation.ui')[0]
 
@@ -24,13 +25,22 @@ class Exam(QWidget, form_window):
         for title in self.titles:
             self.comboBox.addItem(title)
 
+        model = QStringListModel()
+        model.setStringList(self.titles)
+        completer = QCompleter()
+        completer.setModel(model)
+        self.le_keyword.setCompleter(completer)
+
 
         self.comboBox.currentIndexChanged.connect(self.combobox_slot)
         self.btn_recommendation.clicked.connect(self.btn_slot)
 
     def btn_slot(self):
         key_word = self.le_keyword.text()
-        recommendation = self.recommendation_by_keyword(key_word)
+        if key_word in self.titles:
+            recommendation = self.recommendation_by_movie_title(key_word)
+        else:
+            recommendation = self.recommendation_by_keyword(key_word)
         if len(recommendation):
             self.lbl_recommendation.setText(recommendation)
 
