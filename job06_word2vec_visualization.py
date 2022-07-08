@@ -12,7 +12,7 @@ mpl.rcParams['axes.unicode_minus']=False
 rc('font', family=font_name)
 
 embedding_model = Word2Vec.load('./models/word2vec_2017_2020_movies.model')
-key_word = '디씨'
+key_word = '댕댕'
 sim_word = embedding_model.wv.most_similar(key_word, topn=10)
 print(sim_word)
 

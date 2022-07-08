@@ -2,7 +2,7 @@ import pandas as pd
 from konlpy.tag import Okt
 import re
 
-df = pd.read_csv('./crawling_data/reviews_2018_Lee3.csv')
+df = pd.read_csv('./crawling_data/reviews_2022-강예권,김수정,김다영,이현경.csv')
 df.info()
 
 okt = Okt()
@@ -11,7 +11,7 @@ df_stopwords = pd.read_csv('./crawling_data/stopwords.csv')
 stopwords = list(df_stopwords['stopword'])
 stopwords = stopwords + ['영화', '연출', '관객', '개봉', '개봉일', '주인공', '출연', '배우', '리뷰',
                          '촬영', '각본', '극장', '감독', '네이버', '박스', '오피스', '박스오피스',
-                         '장면']
+                         '장면', '관람', '연기', '되어다']
 count = 0
 cleaned_sentences = []
 for review in df.reviews:
@@ -47,6 +47,6 @@ df['cleaned_sentences'] = cleaned_sentences
 df = df[['title', 'cleaned_sentences']]
 df.dropna(inplace=True)
 
-df.to_csv('./crawling_data/cleaned_review_2019.csv', index=False)
+df.to_csv('./crawling_data/cleaned_review_2022.csv', index=False)
 df.info()
 

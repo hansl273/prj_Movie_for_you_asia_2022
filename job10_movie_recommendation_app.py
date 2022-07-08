@@ -18,7 +18,7 @@ class Exam(QWidget, form_window):
         with open('./models/tfidf.pickle', 'rb') as f:
             self.Tfidf = pickle.load(f)
         self.embedding_model = Word2Vec.load('./models/word2vec_2017_2020_movies.model')
-        self.comboBox.addItem('2017-2022 영화 리스트')
+        # self.comboBox.addItem('2017-2022 영화 리스트')
         self.df_reviews = pd.read_csv('./crawling_data/reviews_2017_2022.csv')
         self.titles = list(self.df_reviews['titles'])
         self.titles.sort()
@@ -41,7 +41,7 @@ class Exam(QWidget, form_window):
             recommendation = self.recommendation_by_movie_title(key_word)
         else:
             recommendation = self.recommendation_by_keyword(key_word)
-        if len(recommendation):
+        if recommendation:
             self.lbl_recommendation.setText(recommendation)
 
 
@@ -71,8 +71,11 @@ class Exam(QWidget, form_window):
     def recommendation_by_keyword(self, keyword):
         if keyword:
             keyword = keyword.split()[0]
-
-            sim_word = self.embedding_model.wv.most_similar(keyword, topn=10)
+            try:
+                sim_word = self.embedding_model.wv.most_similar(keyword, topn=10)
+            except:
+                self.lbl_recommendation.setText('제가 모르는 단어에요 ㅠㅠ')
+                return 0
             words = [keyword]
             for word, _ in sim_word:
                 words.append(word)
